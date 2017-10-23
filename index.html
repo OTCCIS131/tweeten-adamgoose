@@ -58,7 +58,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="app">
         <div class="row">
             <div class="col-xs-1 col-sm-2 col-md-3">
                 <img src="https://www.gravatar.com/avatar/a630790b3c3bff49db58d87300a2e69a?s=200" alt="Adam Engebretson" class="img-thumbnail img-circle img-responsive">
@@ -87,7 +87,7 @@
                         <h3 class="panel-title text-center">Compose new Tweet</h3>
                     </div>
                     <div class="panel-body">
-                        <textarea name="" id="" rows="3" class="form-control"></textarea>
+                        <textarea rows="3" class="form-control" v-model="newTweet"></textarea>
                         <br>
                         <button class="btn btn-info">
                             <i class="fa fa-fw fa-image"></i>
@@ -96,8 +96,8 @@
                             <i class="fa fa-fw fa-map-pin"></i>
                         </button>
                         <div class="pull-right">
-                            140&nbsp;
-                            <button class="btn btn-primary">Tweet</button>
+                            {{ remainingCharacters }}&nbsp;
+                            <button class="btn btn-primary" v-bind:disabled="remainingCharacters < 0" v-on:click="tweet">Tweet</button>
                         </div>
                     </div>
                 </div>
@@ -105,27 +105,25 @@
                     <li class="list-group-item">
                         Tweets • Tweets & Replies • Media
                     </li>
-                    <li class="list-group-item">
+                    <tweet v-for="a in tweets" :tweet="a"></tweet>
+                    <!-- <li class="list-group-item" v-for="tweet in tweets">
                         <div class="media">
                             <div class="media-left">
-                                <img class="media-object img-circle" src="https://www.gravatar.com/avatar/a630790b3c3bff49db58d87300a2e69a" alt="Adam Engebretson">
+                                <img class="media-object img-circle" v-bind:src="tweet.email | avatar" v-bind:alt="tweet.name">
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">
-                                    Adam Engebretson
-                                    <small class="text-muted">@artisangoose • Sep 20</small>
+                                    {{ tweet.name }}
+                                    <small class="text-muted">{{ tweet.username }} • {{ tweet.date }}</small>
                                 </h4>
-                                Wow, this class is amazing! #otc #webDev2
+                                {{ tweet.tweet }}
                                 <br><br>
                                 <div>
-                                    <i class="fa fa-fw fa-comment-o"></i> 32
-                                    <i class="fa fa-fw fa-retweet"></i> 1.1k
-                                    <i class="fa fa-fw fa-heart"></i> 50
-                                    <i class="fa fa-fw fa-envelope-o"></i>
+                                    <i class="fa fa-fw fa-heart" v-on:click="like(tweet)"></i> {{ tweet.likes }}
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="col-xs-1 col-sm-2 col-md-3">
@@ -186,11 +184,36 @@
                 </div>
             </div>
         </div>
+        <pre>{{ $data }}</pre>
     </div>
+
+    <script type="text/x-template" id="tweet-template">
+        <li class="list-group-item">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object img-circle" v-bind:src="avatar" v-bind:alt="tweet.name">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        {{ tweet.name }}
+                        <small class="text-muted">{{ tweet.username }} • {{ tweet.date }}</small>
+                    </h4>
+                    {{ tweet.tweet }}
+                    <br><br>
+                    <div>
+                        <i class="fa fa-fw fa-heart" v-on:click="like"></i> {{ tweet.likes }}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+    <script src="https://vuejs.org/js/vue.js"></script>
+    <script src="https://unpkg.com/blueimp-md5@2.10.0/js/md5.js"></script>
+    <script src="./index.js"></script>
 </body>
 
 </html>
